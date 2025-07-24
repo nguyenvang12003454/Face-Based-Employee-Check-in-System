@@ -1,0 +1,9 @@
+numpy==1.26.0
+facenet-pytorch==2.6.0
+faiss-cpu==1.11.0
+torchvision==0.17.2
+streamlit==1.46.1
+opencv-python-headless==4.8.1.78
+matplotlib==3.10.3
+plotly==6.2.0
+scikit-learn==1.7.0
