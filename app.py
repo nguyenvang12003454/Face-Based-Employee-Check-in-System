@@ -84,7 +84,7 @@ def load_facenet_model():
 @st.cache_resource
 def load_faiss_index():
     """Load the FAISS index and label map"""
-    if not os.path.exists("factnet_features.index") or not os.path.exists("facenet_label_map.npy"):
+    if not os.path.exists("facenet_features.index") or not os.path.exists("facenet_label_map.npy"):
         st.error("FAISS index or label map not found.")
         return None, None, None
     
