@@ -15,6 +15,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import base64
 from io import BytesIO
+from pathlib import Path
 
 # Page Configuration
 st.set_page_config(page_title="Employee Dashboard", page_icon="🧑‍💼", layout="wide")
@@ -95,7 +96,7 @@ def load_faiss_index():
 
     return index, label_map, embeddings
 
-facenet_recognition_model = load_facenet_model()
+face_recognition_model = load_facenet_model()
 index, label_map, all_embeddings = load_faiss_index()
 
 transform = T.Compose([
@@ -283,17 +284,34 @@ def visualize_embeddings(query_embedding=None, matches=None):
                     use_container_width=True)
     
 
-def get_avatar_image(employee_name):
-    """Get avatar image path for an employee."""
-    avatar_path_jpg = f"./Dataset/Avatar_{employee_name}.jpg"
-    avatar_path_JPG = f"./Dataset/Avatar_{employee_name}.JPG"
+# def get_avatar_image(employee_name):
+#     """Get avatar image path for an employee."""
+#     avatar_path_jpg = f".\Dataset\Avatar_{employee_name}.jpg"
+#     avatar_path_JPG = f".\Dataset\Avatar_{employee_name}.JPG"
     
-    if os.path.exists(avatar_path_jpg):
-        return avatar_path_jpg
-    elif os.path.exists(avatar_path_JPG):
-        return avatar_path_JPG
-    else:    
-        return "https://via.placeholder.com/300?text=No+Photo"
+#     if os.path.exists(avatar_path_jpg):
+#         return avatar_path_jpg
+#     elif os.path.exists(avatar_path_JPG):
+#         return avatar_path_JPG
+#     else:    
+#         print("Avatar image path are not exist")
+
+def get_avatar_image(employee_name: str) -> str:
+    if employee_name.lower().startswith("avatar_"):
+        employee_name = employee_name[len("avatar_"):]
+
+    base_dir = Path(__file__).resolve().parent / "Dataset"
+    for ext in ("jpg", "JPG", "png"):
+        p = base_dir / f"Avatar_{employee_name}.{ext}"
+        if p.exists():
+            return str(p)
+
+    candidate = base_dir / employee_name
+    if candidate.exists():
+        return str(candidate)
+
+    raise FileNotFoundError(f"Cannot find avatar for employee: {employee_name!r}")
+
 
 # State management
 if "checkin_status" not in st.session_state:
